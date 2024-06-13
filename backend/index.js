@@ -1,25 +1,66 @@
 const express = require('express');
-const jwt = require('jwt');
-const mongoose = require('mongoose');
+const { createTodo } = require('./types');
+const{ updateTodo } = require('./types');
+const { todo } = require('./db');
 
 const app = express();
 const port = 3000;
-const key = '123456';
 app.use(express.json());
 
-/*
-    POST - /todo
 
-    body = {
-        title:string,
-        desc: String,
+app.post('/todo',async (req,res) => {
+    const createPayload = req.body;
+    const parsePayload = createTodo.safeParse(createPayload)
+    if(!parsePayload.success){
+        res.status(411).json({
+            msg: 'u sent the wrong inputs'
+        }) 
+        return;
+    }else{
+        //put in mongodb, respond with 200 when done
+        await todo.create({
+        title:req.body.title,
+        desc:req.body.desc,
+        completed:false,
+        })
+
+        res.status(200).json({
+            msg:'todo created'
+        }) 
     }
-
-*/
-
-app.post('/todo',(req,res) => {
-
 })
+
+
+app.get('/todos',async (req,res) => {
+    const todos = await todo.find({});
+    res.json({
+        todos,
+    })
+})
+
+app.put('/completed',async (req,res) => {
+    const payload = req.body;
+    const parsePayload = updateTodo.safeParse(payload);
+    if(!parsePayload.success){
+        res.status(411).json({
+            msg: 'u sent the wrong inputs'
+        })
+        return;
+    }else{
+        await todo.update({
+            __id:req.body.id
+        },{
+            completed:true,
+        });
+
+        res.json({
+            msg:'todo completed',
+        })
+        
+    }
+})
+
+
 
 app.listen(port,() => {
     console.log(`listening to port ${port}`);
