@@ -6,7 +6,7 @@
 3. delete todo
 4. update todo
 
-
+configured git
 
 to run:
 
