@@ -65,14 +65,11 @@ app.put('/completed',async (req,res) => {
     }
 })
 
-
 app.use((err,req,res,next) => {
     res.json({
         msg:`${err}`
     })
 })
-
-
 
 app.listen(port,() => {
     console.log(`listening to port ${port}`);

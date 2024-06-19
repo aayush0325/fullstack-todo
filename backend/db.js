@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config();
 
-mongoose.connect('mongodb+srv://ayush25khanna:WF741KIL62@cluster0.1snhujj.mongodb.net/tododb').then(
+const url = process.env.URL;
+
+mongoose.connect(url).then(
     console.log('db connected')
 );
 
